@@ -9,7 +9,6 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
-
 public class Main {
 
     public static void main(String[] args) {
@@ -35,55 +34,62 @@ public class Main {
         System.out.println("7. Exit");
         System.out.println("------------------------------------------");
 
-        System.out.println("Enter the choice");
-        int option = sc.nextInt();
-        Employee employee = new Employee();
+        int option=0;
+        while (option < 7) {
+            System.out.println("Enter the choice");
+            option= sc.nextInt();
+            Employee employee = new Employee();
 
-        switch (option) {
-            case 1:
-                displayAll(session);
-                break;
-            case 2: {
-                System.out.println("Enter the employeeId : ");
-                int emp_id = sc.nextInt();
-                break;
-            }
-            case 3:
-                System.out.println("1. Enter employee name : ");
-                employee.setEmp_name(sc.next());
-                System.out.println("2. Enter employee department : ");
-                employee.setEmp_department(sc.next());
-                System.out.println("4. Enter salary : ");
-                employee.setEmp_salary(sc.nextInt());
-
-                System.err.println(employee.toString());
-                break;
-            case 4:
-                System.out.println("Enter the employeeID to update details ");
-                int emp_id = sc.nextInt();
-                System.out.println("Enter 1 for Name , 2 for Department , 3 for salary ");
-                int updateOption = sc.nextInt();
-                switch (updateOption) {
-                    case 1:
-                        employee.setEmp_name(sc.next());
-                        break;
-                    case 2:
-                        employee.setEmp_department(sc.next());
-                        break;
-                    case 3:
-                        employee.setEmp_salary(sc.nextInt());
-                        break;
+            switch (option) {
+                case 1:
+                    displayAll(session);
+                    break;
+                case 2: {
+                    System.out.println("Enter the employeeId : ");
+                    int emp_id = sc.nextInt();
+                    Employee emp = session.get(Employee.class,emp_id);
+                    System.out.println(emp.toString());
+                    break;
                 }
-                update(session, employee, emp_id);
-                break;
-            case 5:
-                delete(session);
-                break;
-            case 6:
-                deleteAll(session);
-                break;
-            default:
-                break;
+                case 3:
+                    System.out.println("1. Enter employee name : ");
+                    employee.setEmp_name(sc.next());
+                    System.out.println("2. Enter employee department : ");
+                    employee.setEmp_department(sc.next());
+                    System.out.println("4. Enter salary : ");
+                    employee.setEmp_salary(sc.nextInt());
+
+                    addNewEmployee(session, employee);
+
+                    System.err.println(employee.toString());
+                    break;
+                case 4:
+                    System.out.println("Enter the employeeID to update details ");
+                    int emp_id = sc.nextInt();
+                    System.out.println("Enter 1 for Name , 2 for Department , 3 for salary ");
+                    int updateOption = sc.nextInt();
+                    switch (updateOption) {
+                        case 1:
+                            employee.setEmp_name(sc.nextLine());
+                            break;
+                        case 2:
+                            employee.setEmp_department(sc.nextLine());
+                            break;
+                        case 3:
+                            employee.setEmp_salary(sc.nextInt());
+                            break;
+                    }
+                    update(session, employee, emp_id);
+                    break;
+                case 5:
+                    delete(session);
+                    break;
+                case 6:
+                    deleteAll(session);
+                    break;
+                default:
+                    break;
+            }
         }
 
         transaction.commit();
@@ -96,7 +102,7 @@ public class Main {
     }
 
     public static void displayAll(Session session) {
-        Query query = session.createQuery("FROM Employee"); 
+        Query query = session.createQuery("FROM Employee");
         List<org.employee.Employee> employees = query.list();
 
         for (org.employee.Employee emp : employees) {
@@ -111,8 +117,8 @@ public class Main {
     public static void deleteAll(Session session) {
 
     }
-    
-    public static void addNewEmployee(Session session) {
 
+    public static void addNewEmployee(Session session, Employee employee) {
+        session.save(employee);
     }
 }

@@ -1,16 +1,20 @@
 package org.employee;
 
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.Transient;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
-// @Entity
+@Entity
 public class Employee {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int emp_id;
     
     private String emp_name;
     private String emp_department;
     private long emp_salary;
-    // @Transient
-    private int emp_id;
 
     public int getEmp_id() {
         return emp_id;
