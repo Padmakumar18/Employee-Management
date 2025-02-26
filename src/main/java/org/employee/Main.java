@@ -1,11 +1,14 @@
 package org.employee;
 
+import java.util.List;
 import java.util.Scanner;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
+
 
 public class Main {
 
@@ -20,7 +23,7 @@ public class Main {
         SessionFactory sf = cfg.buildSessionFactory();
         Session session = sf.openSession();
 
-        Transaction transaction = session.beginTransaction(); 
+        Transaction transaction = session.beginTransaction();
 
         System.out.println("------------------------------------------");
         System.out.println("1. View all employee details");
@@ -36,10 +39,9 @@ public class Main {
         int option = sc.nextInt();
         Employee employee = new Employee();
 
- 
-       switch (option) {
+        switch (option) {
             case 1:
-                 displayAll(session); 
+                displayAll(session);
                 break;
             case 2: {
                 System.out.println("Enter the employeeId : ");
@@ -89,12 +91,17 @@ public class Main {
         sf.close();
     }
 
-    public static void update(Session session,Employee employee,int Id) {
+    public static void update(Session session, Employee employee, int Id) {
 
     }
 
     public static void displayAll(Session session) {
+        Query query = session.createQuery("FROM Employee"); 
+        List<org.employee.Employee> employees = query.list();
 
+        for (org.employee.Employee emp : employees) {
+            System.out.println(emp);
+        }
     }
 
     public static void delete(Session session) {
@@ -102,6 +109,10 @@ public class Main {
     }
 
     public static void deleteAll(Session session) {
+
+    }
+    
+    public static void addNewEmployee(Session session) {
 
     }
 }
