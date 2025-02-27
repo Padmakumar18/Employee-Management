@@ -85,7 +85,7 @@ public class Main {
                     delete(session);
                     break;
                 case 6:
-                    deleteAll(session);
+                    deleteAll(session,transaction);
                     break;
                 default:
                     break;
@@ -114,8 +114,10 @@ public class Main {
 
     }
 
-    public static void deleteAll(Session session) {
-
+    public static void deleteAll(Session session,Transaction transaction) {
+        session.createQuery("DELETE FROM Employee").executeUpdate();
+        transaction.commit();
+        transaction = session.beginTransaction();
     }
 
     public static void addNewEmployee(Session session, Employee employee) {
