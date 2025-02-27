@@ -50,11 +50,9 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee{" +
-                "emp_id=" + emp_id +
-                ", emp_name='" + emp_name + '\'' +
-                ", emp_department='" + emp_department + '\'' +
-                ", emp_salary=" + emp_salary +
-                '}';
+        return "emp_id=" + emp_id +
+                ",\n emp_name='" + emp_name +
+                ", \n emp_department='" + emp_department +
+                ",\n emp_salary=" + emp_salary;
     }
 }

@@ -24,21 +24,21 @@ public class Main {
 
         Transaction transaction = session.beginTransaction();
 
-        System.out.println("------------------------------------------");
-        System.out.println("1. View all employee details");
-        System.out.println("2. View particular employee detail");
-        System.out.println("3. Add new employee");
-        System.out.println("4. Update a particular employee detail");
-        System.out.println("5. Delete a employee");
-        System.out.println("6. Delete all employee details");
-        System.out.println("7. Exit");
-        System.out.println("------------------------------------------");
-
-        int option=0;
+        int option = 0;
+        Employee employee = new Employee();
         while (option < 7) {
+            System.out.println("------------------------------------------");
+            System.out.println("1. View all employee details");
+            System.out.println("2. View particular employee detail");
+            System.out.println("3. Add new employee");
+            System.out.println("4. Update a particular employee detail");
+            System.out.println("5. Delete a employee");
+            System.out.println("6. Delete all employee details");
+            System.out.println("7. Exit");
+            System.out.println("------------------------------------------");
+
             System.out.println("Enter the choice");
-            option= sc.nextInt();
-            Employee employee = new Employee();
+            option = sc.nextInt();
 
             switch (option) {
                 case 1:
@@ -47,7 +47,7 @@ public class Main {
                 case 2: {
                     System.out.println("Enter the employeeId : ");
                     int emp_id = sc.nextInt();
-                    Employee emp = session.get(Employee.class,emp_id);
+                    Employee emp = session.get(Employee.class, emp_id);
                     System.out.println(emp.toString());
                     break;
                 }
