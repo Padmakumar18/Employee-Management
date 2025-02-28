@@ -89,20 +89,15 @@ public class Main {
             if (employees.isEmpty()) {
                 System.out.println("No records found.");
             } else {
-                // Print table header
                 System.out.println("+-------------+----------------+-----------------+------------+");
                 System.out.println("| Employee ID | Name           | Department      | Salary     |");
                 System.out.println("+-------------+----------------+-----------------+------------+");
 
-                // Print each employee record
                 for (Employee emp : employees) {
                     System.out.printf("| %-10d  | %-14s | %-15s | %-10d |\n",
                             emp.getEmp_id(), emp.getEmp_name(), emp.getEmp_department(), emp.getEmp_salary());
                     System.out.println("+-------------+----------------+-----------------+------------+");
                 }
-
-                // Print table footer
-                // System.out.println("+------------+----------------+-----------------+------------+");
             }
         }
     }
@@ -161,28 +156,44 @@ public class Main {
         }
     }
 
-    public static void delete(SessionFactory sf, int empId) {
-        try (Session session = sf.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            Employee emp = session.get(Employee.class, empId);
-
-            if (emp != null) {
-                session.remove(emp);
-                System.out.println("Employee deleted successfully.");
-            } else {
-                System.out.println("Employee not found.");
-            }
-
-            transaction.commit();
-        }
-    }
-
     public static void deleteAll(SessionFactory sf) {
         try (Session session = sf.openSession()) {
             Transaction transaction = session.beginTransaction();
             int deletedCount = session.createQuery("DELETE FROM Employee").executeUpdate();
             transaction.commit();
             System.out.println(deletedCount + " records deleted.");
+        }
+    }
+
+    public static void delete(SessionFactory sf, int empId) {
+        try (Session session = sf.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            Employee emp = session.get(Employee.class, empId);
+            if (emp != null) {
+                session.remove(emp);
+                System.out.println("Employee deleted successfully.");
+            } else {
+                System.out.println("Employee not found.");
+                return;
+            }
+            transaction.commit();
+            resetEmployeeIds(sf);
+        }
+    }
+    
+    public static void resetEmployeeIds(SessionFactory sf) {
+        try (Session session = sf.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            List<Employee> employees = session.createQuery("FROM Employee ORDER BY emp_id", Employee.class).list();
+    
+            int newId = 1;
+            for (Employee emp : employees) {
+                emp.setEmp_id(newId++); 
+                session.merge(emp); 
+            }
+    
+            transaction.commit();
+            System.out.println("Employee IDs reset successfully.");
         }
     }
 }
