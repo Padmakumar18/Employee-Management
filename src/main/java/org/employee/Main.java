@@ -31,7 +31,7 @@ public class Main {
             System.out.println("1. View all employee details");
             System.out.println("2. View particular employee detail");
             System.out.println("3. Add new employee");
-            System.out.println("4. Update a particular employee detail");
+            System.out.println("4. Update a employee detail");
             System.out.println("5. Delete a employee");
             System.out.println("6. Delete all employee details");
             System.out.println("7. Exit");
@@ -47,8 +47,7 @@ public class Main {
                 case 2: {
                     System.out.println("Enter the employeeId : ");
                     int emp_id = sc.nextInt();
-                    Employee emp = session.get(Employee.class, emp_id);
-                    System.out.println(emp.toString());
+                    viewEmployee(session, employee, emp_id);
                     break;
                 }
                 case 3:
@@ -59,11 +58,11 @@ public class Main {
                     System.out.println("4. Enter salary : ");
                     employee.setEmp_salary(sc.nextInt());
 
-                    addNewEmployee(session, employee);
+                    addNewEmployee(session, employee, transaction);
 
                     System.err.println(employee.toString());
                     break;
-                case 4:
+                case 4: {
                     System.out.println("Enter the employeeID to update details ");
                     int emp_id = sc.nextInt();
                     System.out.println("Enter 1 for Name , 2 for Department , 3 for salary ");
@@ -81,11 +80,14 @@ public class Main {
                     }
                     update(session, employee, emp_id);
                     break;
+                }
                 case 5:
-                    delete(session);
+                    System.out.println("Enter employee ID to delete");
+                    int emp_id = sc.nextInt();
+                    delete(session, transaction, emp_id);
                     break;
                 case 6:
-                    deleteAll(session,transaction);
+                    deleteAll(session, transaction);
                     break;
                 default:
                     break;
@@ -101,26 +103,49 @@ public class Main {
 
     }
 
+    public static void viewEmployee(Session session, Employee employee, int emp_id) {
+        Employee emp = session.get(Employee.class, emp_id);
+        if (emp == null) {
+            System.out.println("DB Empty");
+        } else {
+            System.out.println(emp.toString());
+        }
+    }
+
     public static void displayAll(Session session) {
         Query query = session.createQuery("FROM Employee");
         List<org.employee.Employee> employees = query.list();
 
-        for (org.employee.Employee emp : employees) {
-            System.out.println(emp);
+        if (employees == null) {
+            System.out.println("DB Empty");
+        } else {
+            for (org.employee.Employee emp : employees) {
+                System.out.println(emp);
+            }
+            // System.out.println(employees.toString());
         }
-    }
-
-    public static void delete(Session session) {
 
     }
 
-    public static void deleteAll(Session session,Transaction transaction) {
+    public static void delete(Session session, Transaction transaction, int emp_id) {
+
+        Employee emp = session.get(Employee.class, emp_id);
+        if (emp != null) {
+            session.remove(emp);
+        }
+        transaction.commit();
+        transaction = session.beginTransaction();
+    }
+
+    public static void deleteAll(Session session, Transaction transaction) {
         session.createQuery("DELETE FROM Employee").executeUpdate();
         transaction.commit();
         transaction = session.beginTransaction();
     }
 
-    public static void addNewEmployee(Session session, Employee employee) {
+    public static void addNewEmployee(Session session, Employee employee, Transaction transaction) {
         session.save(employee);
+        transaction.commit();
+        transaction = session.beginTransaction();
     }
 }
