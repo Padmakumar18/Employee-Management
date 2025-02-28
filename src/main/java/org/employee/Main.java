@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 public class Main {
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
@@ -18,7 +19,7 @@ public class Main {
         SessionFactory sf = cfg.buildSessionFactory();
 
         int option = 0;
-        while (option < 7) {
+        while (option != 7) {
             System.out.println("------------------------------------------");
             System.out.println("1. View all employee details");
             System.out.println("2. View particular employee detail");
@@ -88,7 +89,20 @@ public class Main {
             if (employees.isEmpty()) {
                 System.out.println("No records found.");
             } else {
-                employees.forEach(System.out::println);
+                // Print table header
+                System.out.println("+-------------+----------------+-----------------+------------+");
+                System.out.println("| Employee ID | Name           | Department      | Salary     |");
+                System.out.println("+-------------+----------------+-----------------+------------+");
+
+                // Print each employee record
+                for (Employee emp : employees) {
+                    System.out.printf("| %-10d  | %-14s | %-15s | %-10d |\n",
+                            emp.getEmp_id(), emp.getEmp_name(), emp.getEmp_department(), emp.getEmp_salary());
+                    System.out.println("+-------------+----------------+-----------------+------------+");
+                }
+
+                // Print table footer
+                // System.out.println("+------------+----------------+-----------------+------------+");
             }
         }
     }
